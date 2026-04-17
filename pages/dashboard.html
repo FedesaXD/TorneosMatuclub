@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — BrawlArena</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="bg-grid"></div>
+
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">BrawlArena</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" id="nav-tournaments" onclick="showSection('tournaments')">
+          <span class="nav-icon">🏆</span> Torneos
+        </button>
+        <button class="nav-item" id="nav-myteam" onclick="showSection('myteam')">
+          <span class="nav-icon">👥</span> Mi Equipo
+        </button>
+        <button class="nav-item" id="nav-bracket" onclick="showSection('bracket')">
+          <span class="nav-icon">📊</span> Bracket
+        </button>
+        <button class="nav-item" id="nav-results" onclick="showSection('results')">
+          <span class="nav-icon">📤</span> Subir Resultado
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-chip" id="userChip"></div>
+        <button class="nav-item" onclick="handleLogout()">
+          <span class="nav-icon">🚪</span> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOURNAMENTS SECTION -->
+      <section id="section-tournaments">
+        <div class="page-header">
+          <h1>TORNEOS <span>DISPONIBLES</span></h1>
+          <p>Únete a un torneo y forma tu equipo de 3 jugadores</p>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="filterTourneys('all', this)">Todos</button>
+          <button class="tab-btn" onclick="filterTourneys('upcoming', this)">Próximos</button>
+          <button class="tab-btn" onclick="filterTourneys('active', this)">En Curso</button>
+          <button class="tab-btn" onclick="filterTourneys('3v3', this)">3v3</button>
+          <button class="tab-btn" onclick="filterTourneys('solo', this)">Solo</button>
+        </div>
+
+        <div id="tournamentGrid" class="tournament-grid">
+          <div class="empty-state">
+            <div class="empty-state-icon">⟳</div>
+            <h3>Cargando torneos...</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- MY TEAM SECTION -->
+      <section id="section-myteam" class="hidden">
+        <div class="page-header">
+          <h1>MI <span>EQUIPO</span></h1>
+          <p>Gestiona tu equipo para el torneo activo</p>
+        </div>
+        <div id="myTeamContent">
+          <div class="empty-state">
+            <div class="empty-state-icon">⟳</div>
+            <h3>Cargando...</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- BRACKET SECTION -->
+      <section id="section-bracket" class="hidden">
+        <div class="page-header">
+          <h1>BRACKET <span>DEL TORNEO</span></h1>
+          <p>Sigue el avance de los equipos</p>
+        </div>
+        <div id="bracketContent">
+          <div class="empty-state">
+            <div class="empty-state-icon">📊</div>
+            <h3>Sin bracket activo</h3>
+            <p>El bracket se genera cuando comienza el torneo</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS SECTION -->
+      <section id="section-results" class="hidden">
+        <div class="page-header">
+          <h1>SUBIR <span>RESULTADO</span></h1>
+          <p>Reporta el resultado de tu partida</p>
+        </div>
+        <div id="resultsContent">
+          <div class="empty-state">
+            <div class="empty-state-icon">⟳</div>
+            <h3>Cargando...</h3>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- TOURNAMENT DETAIL MODAL -->
+  <div id="tourneyModal" class="modal-overlay" onclick="closeModalOutside(event,'tourneyModal')">
+    <div class="modal modal-wide">
+      <button class="modal-close" onclick="closeModal('tourneyModal')">✕</button>
+      <div id="tourneyModalContent"></div>
+    </div>
+  </div>
+
+  <!-- CREATE TEAM MODAL -->
+  <div id="createTeamModal" class="modal-overlay" onclick="closeModalOutside(event,'createTeamModal')">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('createTeamModal')">✕</button>
+      <div class="modal-header">
+        <h2>CREAR EQUIPO</h2>
+        <p>Forma un equipo para este torneo</p>
+      </div>
+      <form class="modal-form" onsubmit="handleCreateTeam(event)">
+        <div class="field">
+          <label>Nombre del Equipo <span class="req">*</span></label>
+          <input type="text" id="teamName" placeholder="Ej: Los Brawlers" required maxlength="30" />
+        </div>
+        <input type="hidden" id="teamTournamentId" />
+        <div id="createTeamError" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" id="createTeamBtn">
+          <span class="btn-text">Crear Equipo</span>
+          <span class="btn-loader hidden">⟳</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

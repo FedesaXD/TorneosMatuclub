@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — BrawlArena</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="bg-grid"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">BrawlArena</span>
+      </div>
+      <div style="padding:8px 12px">
+        <span class="badge badge-pending" style="width:100%;justify-content:center;padding:6px">⚙ PANEL ADMIN</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" id="nav-overview" onclick="showSection('overview')">
+          <span class="nav-icon">📊</span> Resumen
+        </button>
+        <button class="nav-item" id="nav-tournaments" onclick="showSection('tournaments')">
+          <span class="nav-icon">🏆</span> Torneos
+        </button>
+        <button class="nav-item" id="nav-users" onclick="showSection('users')">
+          <span class="nav-icon">👥</span> Jugadores
+        </button>
+        <button class="nav-item" id="nav-matches" onclick="showSection('matches')">
+          <span class="nav-icon">⚔️</span> Partidas
+        </button>
+        <button class="nav-item" id="nav-results" onclick="showSection('results')">
+          <span class="nav-icon">📋</span> Resultados
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-chip" id="userChip"></div>
+        <button class="nav-item" onclick="handleLogout()">
+          <span class="nav-icon">🚪</span> Cerrar Sesión
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- OVERVIEW -->
+      <section id="section-overview">
+        <div class="page-header">
+          <h1>PANEL <span>ADMIN</span></h1>
+          <p>Gestiona torneos, jugadores y partidas</p>
+        </div>
+        <div class="grid-3 mb-2" id="statsGrid">
+          <div class="card" style="text-align:center">
+            <div class="text-muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Jugadores</div>
+            <div style="font-family:var(--font-display);font-size:48px;color:var(--neon)" id="ov-players">—</div>
+          </div>
+          <div class="card" style="text-align:center">
+            <div class="text-muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Torneos</div>
+            <div style="font-family:var(--font-display);font-size:48px;color:var(--neon2)" id="ov-tournaments">—</div>
+          </div>
+          <div class="card" style="text-align:center">
+            <div class="text-muted" style="font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Pendientes</div>
+            <div style="font-family:var(--font-display);font-size:48px;color:var(--warning)" id="ov-pending">—</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-family:var(--font-cond);font-size:18px;font-weight:700;margin-bottom:12px">Acciones Rápidas</div>
+          <div class="flex gap-2 wrap">
+            <button class="btn btn-primary" onclick="showModal('createTourneyModal')">+ Nuevo Torneo</button>
+            <button class="btn btn-outline" onclick="showSection('results')">Revisar Resultados</button>
+            <button class="btn btn-ghost" onclick="showSection('users')">Ver Jugadores</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOURNAMENTS -->
+      <section id="section-tournaments" class="hidden">
+        <div class="page-header flex-between">
+          <div>
+            <h1>TORNEOS</h1>
+            <p>Crea y gestiona los torneos</p>
+          </div>
+          <button class="btn btn-primary" onclick="showModal('createTourneyModal')">+ Nuevo Torneo</button>
+        </div>
+        <div id="adminTourneyList">
+          <div class="empty-state"><div class="empty-state-icon">⟳</div><h3>Cargando...</h3></div>
+        </div>
+      </section>
+
+      <!-- USERS -->
+      <section id="section-users" class="hidden">
+        <div class="page-header">
+          <h1>JUGADORES</h1>
+          <p>Verifica y gestiona cuentas de jugadores</p>
+        </div>
+        <div class="card">
+          <table class="data-table" id="usersTable">
+            <thead>
+              <tr>
+                <th>Nickname</th>
+                <th>Tag Brawl Stars</th>
+                <th>Estado</th>
+                <th>Registro</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="usersTbody">
+              <tr><td colspan="5" style="text-align:center;color:var(--text3)">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- MATCHES -->
+      <section id="section-matches" class="hidden">
+        <div class="page-header">
+          <h1>PARTIDAS</h1>
+          <p>Bracket y partidas de torneos activos</p>
+        </div>
+        <div id="adminMatchesContent">
+          <div class="empty-state"><div class="empty-state-icon">⟳</div><h3>Cargando...</h3></div>
+        </div>
+      </section>
+
+      <!-- RESULTS REVIEW -->
+      <section id="section-results" class="hidden">
+        <div class="page-header">
+          <h1>RESULTADOS</h1>
+          <p>Revisa y confirma resultados enviados por jugadores</p>
+        </div>
+        <div id="resultsReviewContent">
+          <div class="empty-state"><div class="empty-state-icon">⟳</div><h3>Cargando...</h3></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- CREATE TOURNAMENT MODAL -->
+  <div id="createTourneyModal" class="modal-overlay" onclick="closeModalOutside(event,'createTourneyModal')">
+    <div class="modal modal-wide">
+      <button class="modal-close" onclick="closeModal('createTourneyModal')">✕</button>
+      <div class="modal-header">
+        <h2>NUEVO TORNEO</h2>
+        <p>Configura los detalles del torneo</p>
+      </div>
+      <form class="modal-form" onsubmit="handleCreateTourney(event)">
+        <div class="fields-row">
+          <div class="field">
+            <label>Nombre del Torneo <span class="req">*</span></label>
+            <input type="text" id="tName" placeholder="Ej: Copa BrawlArena #1" required maxlength="60" />
+          </div>
+          <div class="field">
+            <label>Formato <span class="req">*</span></label>
+            <select id="tFormat" required>
+              <option value="3v3">3v3 — Equipos de 3 jugadores</option>
+              <option value="solo">Solo — 1 jugador por equipo</option>
+            </select>
+          </div>
+        </div>
+        <div class="fields-row">
+          <div class="field">
+            <label>Fecha de Inicio <span class="req">*</span></label>
+            <input type="datetime-local" id="tStartDate" required />
+          </div>
+          <div class="field">
+            <label>Máximo de Equipos <span class="req">*</span></label>
+            <select id="tMaxTeams" required>
+              <option value="4">4 equipos</option>
+              <option value="8" selected>8 equipos</option>
+              <option value="16">16 equipos</option>
+              <option value="32">32 equipos</option>
+            </select>
+          </div>
+        </div>
+        <div class="fields-row">
+          <div class="field">
+            <label>Modo de Juego</label>
+            <input type="text" id="tMode" placeholder="Ej: Gem Grab, Brawl Ball..." maxlength="50" />
+          </div>
+          <div class="field">
+            <label>Premio (opcional)</label>
+            <input type="text" id="tPrize" placeholder="Ej: Gems, Créditos, etc." maxlength="60" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <textarea id="tDesc" rows="3" placeholder="Reglas, información adicional..." style="resize:vertical"></textarea>
+        </div>
+        <div id="createTourneyError" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" id="createTourneyBtn">
+          <span class="btn-text">Crear Torneo</span>
+          <span class="btn-loader hidden">⟳</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- BRACKET GENERATE CONFIRM -->
+  <div id="generateBracketModal" class="modal-overlay" onclick="closeModalOutside(event,'generateBracketModal')">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('generateBracketModal')">✕</button>
+      <div class="modal-header">
+        <h2>GENERAR BRACKET</h2>
+        <p>Esta acción iniciará el torneo y no puede deshacerse.</p>
+      </div>
+      <div id="bracketGenInfo" style="margin-bottom:1.5rem"></div>
+      <div class="flex gap-2">
+        <button class="btn btn-danger" onclick="closeModal('generateBracketModal')">Cancelar</button>
+        <button class="btn btn-primary" id="confirmBracketBtn" onclick="confirmGenerateBracket()">
+          Generar y Comenzar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrawlArena — Torneos</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="landing-page">
+
+  <div class="scanlines"></div>
+  <div class="bg-grid"></div>
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">BrawlArena</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="showModal('loginModal')">Iniciar Sesión</button>
+      <button class="btn btn-primary" onclick="showModal('registerModal')">Registrarse</button>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-badge">🏆 Plataforma Oficial de Torneos</div>
+    <h1 class="hero-title">
+      DOMINA<br/>
+      <span class="hero-accent">EL BRAWL</span>
+    </h1>
+    <p class="hero-sub">Únete a torneos competitivos de Brawl Stars. Forma tu equipo, compite y lleva tu nombre al top.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary btn-lg" onclick="showModal('registerModal')">Crear Cuenta</button>
+      <button class="btn btn-outline btn-lg" onclick="showModal('loginModal')">Ya tengo cuenta</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-pill"><span class="stat-num" id="statPlayers">—</span><span class="stat-lbl">Jugadores</span></div>
+      <div class="stat-pill"><span class="stat-num" id="statTourneys">—</span><span class="stat-lbl">Torneos</span></div>
+      <div class="stat-pill"><span class="stat-num" id="statTeams">—</span><span class="stat-lbl">Equipos</span></div>
+    </div>
+  </main>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal-overlay" onclick="closeModalOutside(event,'loginModal')">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+      <div class="modal-header">
+        <h2>Iniciar Sesión</h2>
+        <p>Accede a tu cuenta BrawlArena</p>
+      </div>
+      <form id="loginForm" class="modal-form" onsubmit="handleLogin(event)">
+        <div class="field">
+          <label>Nickname</label>
+          <input type="text" id="loginNick" placeholder="Tu nickname" required />
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="loginPass" placeholder="••••••••" required />
+        </div>
+        <div id="loginError" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+          <span class="btn-text">Entrar</span>
+          <span class="btn-loader hidden">⟳</span>
+        </button>
+        <p class="modal-switch">¿No tienes cuenta? <a href="#" onclick="switchModal('loginModal','registerModal')">Regístrate</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- REGISTER MODAL -->
+  <div id="registerModal" class="modal-overlay" onclick="closeModalOutside(event,'registerModal')">
+    <div class="modal modal-wide">
+      <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+      <div class="modal-header">
+        <h2>Crear Cuenta</h2>
+        <p>Únete a la arena competitiva</p>
+      </div>
+      <form id="registerForm" class="modal-form" onsubmit="handleRegister(event)">
+        <div class="fields-row">
+          <div class="field">
+            <label>Nickname <span class="req">*</span></label>
+            <input type="text" id="regNick" placeholder="Tu apodo en la plataforma" required maxlength="20" />
+          </div>
+          <div class="field">
+            <label>Tag de Brawl Stars <span class="req">*</span></label>
+            <input type="text" id="regTag" placeholder="#ABC123XY" required />
+            <small>Encuéntralo en tu perfil del juego</small>
+          </div>
+        </div>
+        <div class="fields-row">
+          <div class="field">
+            <label>Contraseña <span class="req">*</span></label>
+            <input type="password" id="regPass" placeholder="Mínimo 8 caracteres" required minlength="8" />
+          </div>
+          <div class="field">
+            <label>Confirmar Contraseña <span class="req">*</span></label>
+            <input type="password" id="regPassConfirm" placeholder="Repite tu contraseña" required minlength="8" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Captura de Pantalla del Perfil <span class="req">*</span></label>
+          <div class="file-drop" id="fileDrop" onclick="document.getElementById('regScreenshot').click()">
+            <div class="file-drop-icon">📸</div>
+            <div class="file-drop-text">Haz click o arrastra tu imagen aquí</div>
+            <div class="file-drop-sub">JPG, PNG, WEBP — máx. 5MB</div>
+            <input type="file" id="regScreenshot" accept="image/*" required style="display:none" onchange="previewFile(event)" />
+          </div>
+          <div id="filePreview" class="file-preview hidden">
+            <img id="previewImg" src="" alt="Preview" />
+            <button type="button" class="remove-file" onclick="removeFile()">✕ Quitar</button>
+          </div>
+          <small>Deberá mostrar claramente tu tag y nombre de jugador para verificar tu identidad.</small>
+        </div>
+        <div id="registerError" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+          <span class="btn-text">Crear Cuenta</span>
+          <span class="btn-loader hidden">⟳</span>
+        </button>
+        <p class="modal-switch">¿Ya tienes cuenta? <a href="#" onclick="switchModal('registerModal','loginModal')">Inicia sesión</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    loadStats();
+  </script>
+</body>
+</html>
