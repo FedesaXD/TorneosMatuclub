@@ -165,8 +165,14 @@
         <div class="fields-row">
           <div class="field">
             <label>Fecha de Inicio <span class="req">*</span></label>
-            <input type="datetime-local" id="tStartDate" required />
+            <input type="date" id="tStartDate" required />
           </div>
+          <div class="field">
+            <label>Hora de Inicio <span class="req">*</span></label>
+            <input type="time" id="tStartTime" required />
+          </div>
+        </div>
+        <div class="fields-row">
           <div class="field">
             <label>Máximo de Equipos <span class="req">*</span></label>
             <select id="tMaxTeams" required>
@@ -176,16 +182,17 @@
               <option value="32">32 equipos</option>
             </select>
           </div>
-        </div>
-        <div class="fields-row">
           <div class="field">
             <label>Modo de Juego</label>
             <input type="text" id="tMode" placeholder="Ej: Gem Grab, Brawl Ball..." maxlength="50" />
           </div>
+        </div>
+        <div class="fields-row">
           <div class="field">
             <label>Premio (opcional)</label>
             <input type="text" id="tPrize" placeholder="Ej: Gems, Créditos, etc." maxlength="60" />
           </div>
+          <div class="field"></div>
         </div>
         <div class="field">
           <label>Descripción</label>
