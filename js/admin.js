@@ -105,10 +105,14 @@ async function handleCreateTourney(e) {
   errEl.classList.add('hidden');
   setLoading(btn, true);
 
+  const dateVal = document.getElementById('tStartDate').value;
+  const timeVal = document.getElementById('tStartTime').value;
+  const startDateTime = dateVal && timeVal ? `${dateVal}T${timeVal}:00` : null;
+
   const payload = {
     name: document.getElementById('tName').value.trim(),
     format: document.getElementById('tFormat').value,
-    start_date: document.getElementById('tStartDate').value,
+    start_date: startDateTime,
     max_teams: parseInt(document.getElementById('tMaxTeams').value),
     game_mode: document.getElementById('tMode').value.trim() || null,
     prize: document.getElementById('tPrize').value.trim() || null,
